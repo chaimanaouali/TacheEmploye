@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authentication{% endblock %}
+
+{% block body %}
+<div class="container" id="container">
+    <div class="form-container sign-up-container">
+        <form action="{{ path('app_register') }}" method="post">
+            <h1>Create Account</h1>
+            <div class="social-container">
+                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span>or use your email for registration</span>
+            {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.nom, {'attr': {'placeholder': 'Name'}}) }}
+                {{ form_row(registrationForm.prenom, {'attr': {'placeholder': 'Last Name'}}) }}
+                {{ form_row(registrationForm.email, {'attr': {'placeholder': 'Email'}}) }}
+                {{ form_row(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+                {{ form_row(registrationForm.agreeTerms) }}
+                <button type="submit">Sign Up</button>
+            {{ form_end(registrationForm) }}
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form method="post" action="{{ path('app_login') }}">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <label for="inputEmail" class="sr-only">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                Sign in
+            </button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1>Welcome Back!</h1>
+                <p>To keep connected with us please login with your personal info</p>
+                <button class="ghost" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Hello, Friend!</h1>
+                <p>Enter your personal details and start journey with us</p>
+                <button class="ghost" id="signUp">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signUpButton = document.getElementById('signUp');
+            const signInButton = document.getElementById('signIn');
+            const container = document.getElementById('container');
+
+            if (signUpButton && signInButton && container) {
+                signUpButton.addEventListener('click', () => {
+                    console.log('Sign Up button clicked');
+                    container.classList.add("right-panel-active");
+                });
+
+                signInButton.addEventListener('click', () => {
+                    console.log('Sign In button clicked');
+                    container.classList.remove("right-panel-active");
+                });
+            } else {
+                console.error('Required elements not found in the DOM');
+            }
+        });
+    </script>
+{% endblock %}

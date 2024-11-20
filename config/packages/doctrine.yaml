@@ -20,8 +20,9 @@ doctrine:
 when@test:
     doctrine:
         dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+        # Configure the middleware
+        middlewares:
+            - App\Middleware\PreventRootConnectionMiddleware
 
 when@prod:
     doctrine:
